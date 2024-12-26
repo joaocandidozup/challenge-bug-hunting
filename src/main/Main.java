@@ -1,5 +1,6 @@
 package main;
 
+import handler.FileHandle;
 import manager.VideoManager;
 import repository.FileVideoRepository;
 import service.VideoService;
@@ -7,14 +8,16 @@ import service.VideoServiceImpl;
 import strategy.SearchStrategy;
 import strategy.TitleSearchStrategy;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         VideoManager videoManager = new VideoManager();
         VideoService videoService = new VideoServiceImpl(new FileVideoRepository("videos.txt"));
         SearchStrategy searchStrategy = new TitleSearchStrategy();
+        FileHandle fileHandle = new FileHandle();
         int opcao = 0;
         while (opcao != 9) {
             exibeMenu();
@@ -50,6 +53,27 @@ public class Main {
                 String query = scanner.nextLine();
                 videoManager.pesquisaVideoPorTitulo(query, searchStrategy, videoService);
             } else if (opcao == 4) {
+                System.out.print("Digite o título do vídeo para editar: ");
+                String titulo = scanner.nextLine();
+                System.out.print("Digite o novo título do vídeo: ");
+                String novoTitulo = validaString(scanner, "Campo título não pode ser vazio ou conter só números");
+                System.out.print("Digite a nova descrição do vídeo: ");
+                String novaDescricao = validaString(scanner, "Campo descrição não pode ser vazio ou conter só números");
+                System.out.print("Digite a nova duração do vídeo (em minutos): ");
+                try {
+                    int novaDuracao = validaInteiroPositivo(scanner, "Duração tem que ser maior que zero");
+                    System.out.print("Digite a nova categoria do vídeo: ");
+                    String novaCategoria = validaString(scanner, "Campo categoria não pode ser vazio ou conter só números");
+                    System.out.print("Digite a nova data de publicação (dd/MM/yyyy): ");
+                    String novaDataStr = scanner.nextLine();
+                    videoManager = new VideoManager();
+                    fileHandle.editaVideo(titulo, novoTitulo, novaDescricao, novaDuracao, novaCategoria, novaDataStr);
+                    System.out.println("Vídeo atualizado com sucesso!");
+                } catch (Exception e) {
+                    System.err.println("Erro ao editar o vídeo: " + e.getMessage());
+                    scanner.next();
+                }
+            } else if (opcao == 5) {
                 System.out.println("Saindo do sistema...");
                 break;
             } else {

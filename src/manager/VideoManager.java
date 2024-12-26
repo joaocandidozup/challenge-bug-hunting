@@ -1,15 +1,25 @@
 package manager;
 
+import handler.FileHandle;
 import model.Video;
 import service.VideoService;
 import strategy.SearchStrategy;
 
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class VideoManager {
+
+    private List<Video> videos;
+
+    public VideoManager() {
+        this.videos = new ArrayList<>();
+    }
+
     public void adicionaVideo(String titulo, String descricao, int duracao, String categoria, String dataStr, VideoService videoService) {
 
         try {
@@ -43,4 +53,6 @@ public class VideoManager {
         }
 
     }
+
+
 }
