@@ -34,8 +34,13 @@ public class VideoManager {
 
     public void pesquisaVideoPorTitulo(String query, SearchStrategy searchStrategy, VideoService videoService) {
         List<Video> resultados = searchStrategy.search(videoService.listVideos(), query);
-        for (Video video : resultados) {
-            System.out.println(video);
+        if (!resultados.isEmpty()) {
+            for (Video video : resultados) {
+                System.out.println(video);
+            }
+        } else {
+            System.out.println("Vídeo não encontrado");
         }
+
     }
 }
