@@ -1,14 +1,12 @@
 package main;
 
 import manager.VideoManager;
-import model.Video;
 import repository.FileVideoRepository;
 import service.VideoService;
 import service.VideoServiceImpl;
 import strategy.SearchStrategy;
 import strategy.TitleSearchStrategy;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -46,17 +44,11 @@ public class Main {
                 }
 
             } else if (opcao == 2) {
-                List<Video> videos = videoService.listVideos();
-                for (Video video : videos) {
-                    System.out.println(video);
-                }
+                videoManager.listaVideos(videoService);
             } else if (opcao == 3) {
                 System.out.print("Digite o título para busca: ");
                 String query = scanner.nextLine();
-                List<Video> resultados = searchStrategy.search(videoService.listVideos(), query);
-                for (Video video : resultados) {
-                    System.out.println(video);
-                }
+                videoManager.pesquisaVideoPorTitulo(query, searchStrategy, videoService);
             } else if (opcao == 4) {
                 System.out.println("Saindo do sistema...");
                 break;
@@ -85,6 +77,7 @@ public class Main {
                 """;
         System.out.print(menu);
     }
+
     private static String validaString(Scanner scanner, String mensagemErro) {
         String string = scanner.nextLine();
         while (string.isEmpty()) {
@@ -107,7 +100,6 @@ public class Main {
         }
         scanner.nextLine();
         return numero;
-
     }
 
 }
