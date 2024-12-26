@@ -74,6 +74,16 @@ public class Main {
                     scanner.next();
                 }
             } else if (opcao == 5) {
+                System.out.print("Digite o título do vídeo para excluir: ");
+                String titulo = validaString(scanner, "Campo título não pode ser vazio ou conter só números");
+                fileHandle.excluirVideo(titulo);
+            } else if (opcao == 6) {
+
+            } else if (opcao == 7) {
+
+            } else if (opcao == 8) {
+
+            } else if (opcao == 9) {
                 System.out.println("Saindo do sistema...");
                 break;
             } else {
