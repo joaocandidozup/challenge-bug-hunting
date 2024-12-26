@@ -1,5 +1,6 @@
 package main;
 
+import manager.VideoManager;
 import model.Video;
 import repository.FileVideoRepository;
 import service.VideoService;
@@ -7,54 +8,41 @@ import service.VideoServiceImpl;
 import strategy.SearchStrategy;
 import strategy.TitleSearchStrategy;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.util.zip.DataFormatException;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        VideoManager videoManager = new VideoManager();
         VideoService videoService = new VideoServiceImpl(new FileVideoRepository("videos.txt"));
         SearchStrategy searchStrategy = new TitleSearchStrategy();
         int opcao = 0;
-        System.out.println("\n=== Sistema de Gerenciamento de Vídeos ===");
         while (opcao != 9) {
             exibeMenu();
             try {
                 opcao = scanner.nextInt();
-                scanner.nextLine();
+                scanner.nextLine();// Consumir a quebra de linha
             } catch (Exception e) {
                 System.err.println("Digite apenas numeros inteiros no campo opção");
                 scanner.nextLine();
             }
-
             if (opcao == 1) {
                 System.out.print("Digite o título do vídeo: ");
-                String titulo = scanner.nextLine();
+                String titulo = validaString(scanner, "Campo titulo não pode ser vazio ou conter so numeros");
                 System.out.print("Digite a descrição do vídeo: ");
-                String descricao = scanner.nextLine();
+                String descricao = validaString(scanner, "Campo descrição não pode ser vazio ou conter só numeros");
+                System.out.print("Digite a duração do vídeo (em minutos): ");
                 try {
-
-                    System.out.print("Digite a duração do vídeo (em minutos): ");
-                    int duracao = scanner.nextInt();
-                    scanner.nextLine(); // Consumir a quebra de linha
+                    int duracao = validaInteiroPositivo(scanner, "Duração tem que ser maior que zero");
                     System.out.print("Digite a categoria do vídeo: ");
-                    String categoria = scanner.nextLine();
+                    String categoria = validaString(scanner, "Campo categoria não pode ser vazio ou conter só numeros");
                     System.out.print("Digite a data de publicação (dd/MM/yyyy): ");
                     String dataStr = scanner.nextLine();
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                    Date dataPublicacao = sdf.parse(dataStr);
-                    Video video = new Video(titulo, descricao, duracao, categoria, dataPublicacao);
-                    videoService.addVideo(video);
-                    System.out.println("Vídeo adicionado com sucesso!");
-                } catch (ParseException e) {
-                    System.out.println("Video nao cadastrado! erro no formato da data ,use esse padrao (dd/MM/yyyy) ");
+                    videoManager.adicionaVideo(titulo, descricao, duracao, categoria, dataStr, videoService);
                 } catch (Exception e) {
-                    System.out.println("Digite apenas numeros inteiros no campo duração");
-                    scanner.nextLine();
+                    System.err.println("Digite apenas numeros inteiros no campo duração");
+                    scanner.next();
                 }
 
             } else if (opcao == 2) {
@@ -83,6 +71,7 @@ public class Main {
     private static void exibeMenu() {
         String menu = """
                 
+                === Sistema de Gerenciamento de Vídeos ===
                 1 - Adicionar vídeo.
                 2 - Listar vídeos.
                 3 - Pesquisar vídeo por título.
@@ -94,7 +83,31 @@ public class Main {
                 9 - Sair
                 Digite uma opção:
                 """;
-        System.out.println(menu);
+        System.out.print(menu);
+    }
+    private static String validaString(Scanner scanner, String mensagemErro) {
+        String string = scanner.nextLine();
+        while (string.isEmpty()) {
+            System.err.println(mensagemErro);
+            string = scanner.nextLine();
+        }
+        while (string.matches("\\d+")) {
+            System.err.println(mensagemErro);
+            string = scanner.nextLine();
+
+        }
+        return string;
+    }
+
+    private static int validaInteiroPositivo(Scanner scanner, String mensagemErro) {
+        int numero = scanner.nextInt();
+        if (numero <= 0) {
+            System.err.println(mensagemErro);
+            scanner.next();
+        }
+        scanner.nextLine();
+        return numero;
+
     }
 
 }
