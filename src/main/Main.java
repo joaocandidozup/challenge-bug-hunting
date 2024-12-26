@@ -37,7 +37,7 @@ public class Main {
                 try {
                     int duracao = validaInteiroPositivo(scanner, "Duração tem que ser maior que zero");
                     System.out.print("Digite a categoria do vídeo: ");
-                    String categoria = validaString(scanner, "Campo categoria não pode ser vazio ou conter só numeros");
+                    String categoria = validaCategoria(scanner,"Digite Serie, Filme ou Documentario");
                     System.out.print("Digite a data de publicação (dd/MM/yyyy): ");
                     String dataStr = scanner.nextLine();
                     videoManager.adicionaVideo(titulo, descricao, duracao, categoria, dataStr, videoService);
@@ -63,7 +63,7 @@ public class Main {
                 try {
                     int novaDuracao = validaInteiroPositivo(scanner, "Duração tem que ser maior que zero");
                     System.out.print("Digite a nova categoria do vídeo: ");
-                    String novaCategoria = validaString(scanner, "Campo categoria não pode ser vazio ou conter só números");
+                    String novaCategoria = validaCategoria(scanner,"Digite Serie, Filme ou Documentario");
                     System.out.print("Digite a nova data de publicação (dd/MM/yyyy): ");
                     String novaDataStr = scanner.nextLine();
                     videoManager = new VideoManager();
@@ -134,6 +134,14 @@ public class Main {
         }
         scanner.nextLine();
         return numero;
+    }
+    private static String validaCategoria(Scanner scanner,String mensagemErro){
+        String categoria = scanner.nextLine();
+        while (!categoria.equalsIgnoreCase("Filme")&& !categoria.equalsIgnoreCase("Serie")&& !categoria.equalsIgnoreCase("Documentario")){
+            System.err.println(mensagemErro);
+            categoria = scanner.nextLine();
+        }
+        return categoria;
     }
 
 }
