@@ -54,4 +54,14 @@ public class VideoManager {
 
     }
 
+    public void buscarPorCategoria(String query, SearchStrategy searchStrategy, VideoService videoService) {
+        List<Video> resultados = searchStrategy.buscaPorCategoria(videoService.listVideos(), query);
+        if (!resultados.isEmpty()) {
+            for (Video video : resultados) {
+                System.out.println(video);
+            }
+        } else {
+            System.out.println("Categoria não contem videos");
+        }
+    }
 }

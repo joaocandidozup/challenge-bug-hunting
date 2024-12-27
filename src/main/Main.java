@@ -37,7 +37,7 @@ public class Main {
                 try {
                     int duracao = validaInteiroPositivo(scanner, "Duração tem que ser maior que zero");
                     System.out.print("Digite a categoria do vídeo: ");
-                    String categoria = validaCategoria(scanner,"Digite Serie, Filme ou Documentario");
+                    String categoria = validaCategoria(scanner,"Categorias aceitas: Serie, Filme ou Documentario");
                     System.out.print("Digite a data de publicação (dd/MM/yyyy): ");
                     String dataStr = scanner.nextLine();
                     videoManager.adicionaVideo(titulo, descricao, duracao, categoria, dataStr, videoService);
@@ -63,7 +63,7 @@ public class Main {
                 try {
                     int novaDuracao = validaInteiroPositivo(scanner, "Duração tem que ser maior que zero");
                     System.out.print("Digite a nova categoria do vídeo: ");
-                    String novaCategoria = validaCategoria(scanner,"Digite Serie, Filme ou Documentario");
+                    String novaCategoria = validaCategoria(scanner,"Categorias aceitas: Serie, Filme ou Documentario");
                     System.out.print("Digite a nova data de publicação (dd/MM/yyyy): ");
                     String novaDataStr = scanner.nextLine();
                     videoManager = new VideoManager();
@@ -78,7 +78,9 @@ public class Main {
                 String titulo = validaString(scanner, "Campo título não pode ser vazio ou conter só números");
                 fileHandle.excluirVideo(titulo);
             } else if (opcao == 6) {
-
+                System.out.println("Digite a Categoria de busca");
+                String query = validaCategoria(scanner, "Categorias aceitas: Serie, Filme ou Documentario");
+                videoManager.buscarPorCategoria(query,searchStrategy,videoService);
             } else if (opcao == 7) {
 
             } else if (opcao == 8) {
