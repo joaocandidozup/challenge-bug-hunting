@@ -84,7 +84,7 @@ public class Main {
             } else if (opcao == 7) {
                 videoManager.ordenarPorDataDePublicacao(searchStrategy,videoService);
             } else if (opcao == 8) {
-
+                videoManager.exibirRelatorio(searchStrategy,videoService);
             } else if (opcao == 9) {
                 System.out.println("Saindo do sistema...");
                 break;

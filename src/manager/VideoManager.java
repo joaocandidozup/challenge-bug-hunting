@@ -1,16 +1,12 @@
 package manager;
 
-import handler.FileHandle;
 import model.Video;
 import service.VideoService;
 import strategy.SearchStrategy;
 
-import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class VideoManager {
 
@@ -65,7 +61,7 @@ public class VideoManager {
         }
     }
 
-    public void ordenarPorDataDePublicacao( SearchStrategy searchStrategy, VideoService videoService) {
+    public void ordenarPorDataDePublicacao(SearchStrategy searchStrategy, VideoService videoService) {
         List<Video> resultados = searchStrategy.ordenaPorDataDePublicacao(videoService.listVideos());
         if (!resultados.isEmpty()) {
             for (Video video : resultados) {
@@ -73,6 +69,31 @@ public class VideoManager {
             }
         } else {
             System.out.println("");
+        }
+    }
+
+    public void exibirRelatorio(SearchStrategy searchStrategy, VideoService videoService) {
+        List<Video> videos = videoService.listVideos();
+
+        int total = 0;
+        for (Video video : videos) {
+            total += video.getDuracao();
+        }
+
+        Map<String, Integer> quantidadePorCategoria = new HashMap<>();
+        for (Video video : videos) {
+            String categoria = video.getCategoria();
+            quantidadePorCategoria.put(categoria, quantidadePorCategoria.getOrDefault(categoria, 0) + 1);
+        }
+
+        System.out.println(
+                "Número total de vídeos: " + videos.size() +
+                        "\nDuração total de todos os vídeos: " + total +
+                        "\nQuantidade de vídeos por categoria"
+        );
+
+        for (Map.Entry<String, Integer> entry : quantidadePorCategoria.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
         }
     }
 }
