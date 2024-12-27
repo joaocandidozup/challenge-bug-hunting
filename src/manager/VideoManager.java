@@ -64,4 +64,15 @@ public class VideoManager {
             System.out.println("Categoria não contem videos");
         }
     }
+
+    public void ordenarPorDataDePublicacao( SearchStrategy searchStrategy, VideoService videoService) {
+        List<Video> resultados = searchStrategy.ordenaPorDataDePublicacao(videoService.listVideos());
+        if (!resultados.isEmpty()) {
+            for (Video video : resultados) {
+                System.out.println(video);
+            }
+        } else {
+            System.out.println("");
+        }
+    }
 }

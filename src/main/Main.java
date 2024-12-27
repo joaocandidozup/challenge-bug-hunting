@@ -82,7 +82,7 @@ public class Main {
                 String query = validaCategoria(scanner, "Categorias aceitas: Serie, Filme ou Documentario");
                 videoManager.buscarPorCategoria(query,searchStrategy,videoService);
             } else if (opcao == 7) {
-
+                videoManager.ordenarPorDataDePublicacao(searchStrategy,videoService);
             } else if (opcao == 8) {
 
             } else if (opcao == 9) {
