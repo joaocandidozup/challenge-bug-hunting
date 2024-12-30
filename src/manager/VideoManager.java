@@ -1,44 +1,66 @@
 package manager;
 
+import handler.FileHandle;
 import model.Video;
+import repository.FileVideoRepository;
 import service.VideoService;
+import service.VideoServiceImpl;
 import strategy.SearchStrategy;
+import strategy.TitleSearchStrategy;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class VideoManager {
+    SearchStrategy searchStrategy = new TitleSearchStrategy();
+    VideoService videoService = new VideoServiceImpl(new FileVideoRepository(new FileHandle("videos.txt")));
+    Scanner scanner = new Scanner(System.in);
 
-    private List<Video> videos;
-
-    public VideoManager() {
-        this.videos = new ArrayList<>();
-    }
-
-    public void adicionaVideo(String titulo, String descricao, int duracao, String categoria, String dataStr, VideoService videoService) {
-
+    public void adicionarVideo(String titulo, String descricao, int duracao, String categoria) {
+        System.out.print("Digite a data de publicação (dd/MM/yyyy): ");
+        String dataStr = scanner.nextLine();
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             sdf.setLenient(false);
             Date dataPublicacao = sdf.parse(dataStr);
-            Video video = new Video(titulo, descricao, duracao, categoria, dataPublicacao);
+            Video video = new Video(titulo, descricao, duracao, categoria, validaData(dataPublicacao, scanner));
             videoService.addVideo(video);
             video.getCategoria();
             System.out.println("Vídeo adicionado com sucesso!");
         } catch (ParseException e) {
             System.err.println("Data inválida, digite no formato (dd/MM/yyyy)");
+        } catch (Exception e) {
+
         }
     }
 
-    public void listaVideos(VideoService videoService) {
+    public void editarVideo(String videoTitulo, String titulo, String descricao, int duracao, String categoria) {
+        String novaDataStr = scanner.nextLine();
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.setLenient(false);
+            Date dataPublicacao = sdf.parse(novaDataStr);
+            videoService.editVideo(videoTitulo, titulo, descricao, duracao, categoria, validaData(dataPublicacao, scanner));
+        } catch (ParseException e) {
+            System.err.println("Data inválida, digite no formato (dd/MM/yyyy)");
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void excluirVideo(String titulo) {
+        videoService.deleteVideo(titulo);
+    }
+
+    public void listarVideos() {
         List<Video> videos = videoService.listVideos();
         for (Video video : videos) {
             System.out.println(video);
         }
     }
 
-    public void pesquisaVideoPorTitulo(String query, SearchStrategy searchStrategy, VideoService videoService) {
+    public void pesquisarVideoPorTitulo(String query) {
         List<Video> resultados = searchStrategy.search(videoService.listVideos(), query);
         if (!resultados.isEmpty()) {
             for (Video video : resultados) {
@@ -50,8 +72,8 @@ public class VideoManager {
 
     }
 
-    public void buscarPorCategoria(String query, SearchStrategy searchStrategy, VideoService videoService) {
-        List<Video> resultados = searchStrategy.buscaPorCategoria(videoService.listVideos(), query);
+    public void buscarPorCategoria(String query) {
+        List<Video> resultados = searchStrategy.searchByCategory(videoService.listVideos(), query);
         if (!resultados.isEmpty()) {
             for (Video video : resultados) {
                 System.out.println(video);
@@ -61,8 +83,8 @@ public class VideoManager {
         }
     }
 
-    public void ordenarPorDataDePublicacao(SearchStrategy searchStrategy, VideoService videoService) {
-        List<Video> resultados = searchStrategy.ordenaPorDataDePublicacao(videoService.listVideos());
+    public void ordenarPorDataDePublicacao() {
+        List<Video> resultados = searchStrategy.orderByPublicationDate(videoService.listVideos());
         if (!resultados.isEmpty()) {
             for (Video video : resultados) {
                 System.out.println(video);
@@ -72,7 +94,7 @@ public class VideoManager {
         }
     }
 
-    public void exibirRelatorio(SearchStrategy searchStrategy, VideoService videoService) {
+    public void exibirRelatorio() {
         List<Video> videos = videoService.listVideos();
 
         int total = 0;
@@ -96,4 +118,23 @@ public class VideoManager {
             System.out.println(entry.getKey() + ": " + entry.getValue());
         }
     }
+
+    private static Date validaData(Date dataPublicacao, Scanner scanner) throws ParseException {
+
+        Date dataAtual = new Date();
+        if (dataPublicacao.after(dataAtual)) {
+            System.err.println("Data inválida, não pode ser uma data futura");
+            return null;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String data = sdf.format(dataPublicacao);
+        if (data.charAt(6) == '0') {
+            System.err.println("Data inválida, tem que conter 4 digitos no ano");
+            return null;
+        }
+        dataPublicacao = sdf.parse(data);
+        return dataPublicacao;
+    }
+
+
 }
