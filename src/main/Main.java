@@ -113,14 +113,19 @@ public class Main {
     }
 
     private static int validaInteiroPositivo(Scanner scanner, String mensagemErro) {
-        int numero = scanner.nextInt();
-        try {
-            if (numero <= 0) {
-                System.err.println(mensagemErro);
+        int numero = -1;
+        while (true) {
+            try {
+                numero = scanner.nextInt();
+                if (numero > 0) {
+                    break;
+                } else {
+                    System.err.println(mensagemErro);
+                }
+            } catch (Exception e) {
+                System.err.println("Digite apenas números inteiros.");
                 scanner.next();
             }
-        } catch (Exception e) {
-            System.err.println("Digite apenas numeros inteiros no campo duração");
         }
         scanner.nextLine();
         return numero;
