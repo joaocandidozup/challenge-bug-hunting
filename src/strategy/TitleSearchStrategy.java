@@ -12,16 +12,19 @@ public class TitleSearchStrategy implements SearchStrategy {
                 .filter(video -> video.getTitulo().toLowerCase().contains(query.toLowerCase()))
                 .collect(Collectors.toList());
     }
+
     @Override
-    public List<Video> buscaPorCategoria(List<Video> videos, String query) {
+    public List<Video> searchByCategory(List<Video> videos, String query) {
         return videos.stream()
                 .filter(video -> video.getCategoria().toLowerCase().contains(query.toLowerCase()))
                 .collect(Collectors.toList());
     }
+
     @Override
-    public List<Video> ordenaPorDataDePublicacao(List<Video> videos) {
+    public List<Video> orderByPublicationDate(List<Video> videos) {
         return videos.stream()
                 .sorted((v1, v2) -> v1.getDataPublicacao().compareTo(v2.getDataPublicacao()))
                 .collect(Collectors.toList());
     }
+
 }

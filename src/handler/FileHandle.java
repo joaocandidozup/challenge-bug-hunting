@@ -1,13 +1,44 @@
 package handler;
 
+import model.Video;
+
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FileHandle {
-    private static final String FILE_PATH = "videos.txt";
-    File file = new File(FILE_PATH);
-    public void editaVideo(String titulo, String novoTitulo, String novaDescricao, int novaDuracao, String novaCategoria, String novaDataStr) {
+    private final File file;
+    public FileHandle(String filePath) {
+        this.file = new File(filePath);
+    }
+    public void save(Video video) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
+            bw.write(video.toString());
+            bw.newLine();
+        } catch (IOException e) {
+            // Ignorar erros por enquanto
+        }
+    }
+    public List<Video> findAll() {
+        List<Video> videos = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                Video video = Video.fromString(line);
+                if (video != null) {
+                    videos.add(video);
+                }
+            }
+        } catch (IOException e) {
+            // Ignorar erros por enquanto
+        }
+        return videos;
+    }
+    public void editVideo(String videoTitulo, String titulo, String descricao, int duracao, String categoria, Date dataPublicacao) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String novaDataStr = sdf.format(dataPublicacao);
 
         List<String> linhasAtualizadas = new ArrayList<>();
 
@@ -18,7 +49,7 @@ public class FileHandle {
                 String[] dados = linha.split(";");
 
                 if (dados[0].equalsIgnoreCase(titulo)) {
-                    String novaLinha = String.join(";", novoTitulo, novaDescricao, String.valueOf(novaDuracao), novaCategoria, novaDataStr);
+                    String novaLinha = String.join(";", titulo, descricao, String.valueOf(duracao), categoria, novaDataStr);
                     linhasAtualizadas.add(novaLinha);
                 } else {
                     linhasAtualizadas.add(linha);
@@ -38,7 +69,7 @@ public class FileHandle {
         }
     }
 
-    public void excluirVideo(String titulo) {
+    public void deleteVideo(String titulo) {
         List<String> linhasAtualizadas = new ArrayList<>();
         boolean videoEncontrado = false;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -71,4 +102,3 @@ public class FileHandle {
         }
     }
 }
-

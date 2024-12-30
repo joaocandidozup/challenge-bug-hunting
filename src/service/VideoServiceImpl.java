@@ -3,6 +3,7 @@ package service;
 import model.Video;
 import repository.VideoRepository;
 
+import java.util.Date;
 import java.util.List;
 
 public class VideoServiceImpl implements VideoService {
@@ -22,7 +23,15 @@ public class VideoServiceImpl implements VideoService {
         return repository.findAll();
     }
 
+    @Override
+    public void editVideo(String videoTitulo, String titulo, String descricao, int duracao, String categoria, Date dataPublicacao) {
+        repository.editVideo(videoTitulo,titulo,descricao,duracao,categoria,dataPublicacao);
+    }
 
+    @Override
+    public void deleteVideo(String titulo) {
+        repository.deleteVideo(titulo);
+    }
 
 
 }
