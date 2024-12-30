@@ -41,7 +41,8 @@ public class VideoManager {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             sdf.setLenient(false);
             Date dataPublicacao = sdf.parse(novaDataStr);
-            videoService.editVideo(videoTitulo, titulo, descricao, duracao, categoria, validaData(dataPublicacao, scanner));
+            Video video = new Video(titulo, descricao, duracao, categoria, validaData(dataPublicacao, scanner));
+            videoService.editVideo(videoTitulo, video);
         } catch (ParseException e) {
             System.err.println("Data inválida, digite no formato (dd/MM/yyyy)");
         } catch (Exception e) {

@@ -36,9 +36,9 @@ public class FileHandle {
         }
         return videos;
     }
-    public void editVideo(String videoTitulo, String titulo, String descricao, int duracao, String categoria, Date dataPublicacao) {
+    public void editVideo(String videoTitulo, Video video) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String novaDataStr = sdf.format(dataPublicacao);
+        String novaDataStr = sdf.format(video.getDataPublicacao());
 
         List<String> linhasAtualizadas = new ArrayList<>();
 
@@ -48,8 +48,14 @@ public class FileHandle {
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(";");
 
-                if (dados[0].equalsIgnoreCase(titulo)) {
-                    String novaLinha = String.join(";", titulo, descricao, String.valueOf(duracao), categoria, novaDataStr);
+                if (dados[0].equalsIgnoreCase(videoTitulo)) {
+                    String novaLinha = String.join(";",
+                            video.getTitulo(),
+                            video.getDescricao(),
+                            String.valueOf(video.getDuracao()),
+                            video.getCategoria(),
+                            novaDataStr
+                    );
                     linhasAtualizadas.add(novaLinha);
                 } else {
                     linhasAtualizadas.add(linha);
@@ -57,6 +63,7 @@ public class FileHandle {
             }
         } catch (IOException e) {
             System.err.println("Erro ao ler o arquivo: " + e.getMessage());
+            return;
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {

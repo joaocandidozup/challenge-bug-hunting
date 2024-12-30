@@ -1,6 +1,2 @@
-
-video1;teste;2;filme;12/12/2000
-video2;teste;-1;documentario;12/12/2024
-video2;teste;-1;serie;12/12/2023
-video3;teste;1;serie;12/12/2022
-video2;teste;8;serie;12/12/2023
+videoeditado;teste;3;serie;12/12/2024
+video2;-1;3;serie;12/12/2023

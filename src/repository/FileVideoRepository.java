@@ -25,8 +25,8 @@ public class FileVideoRepository implements VideoRepository {
     }
 
     @Override
-    public void editVideo(String videoTitulo, String titulo, String descricao, int duracao, String categoria, Date dataPublicacao) {
-        fileHandle.editVideo(videoTitulo,titulo,descricao,duracao,categoria,dataPublicacao);
+    public void editVideo(String videoTitulo, Video video) {
+        fileHandle.editVideo(videoTitulo,video);
     }
 
     @Override
