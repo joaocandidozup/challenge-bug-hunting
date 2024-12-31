@@ -5,22 +5,24 @@ import model.Video;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FileHandle {
     private final File file;
+
     public FileHandle(String filePath) {
         this.file = new File(filePath);
     }
+
     public void save(Video video) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
             bw.write(video.toString());
             bw.newLine();
         } catch (IOException e) {
-            // Ignorar erros por enquanto
+            System.err.println("Erro ao salvar o vídeo no arquivo: " + e.getMessage());
         }
     }
+
     public List<Video> findAll() {
         List<Video> videos = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -32,10 +34,11 @@ public class FileHandle {
                 }
             }
         } catch (IOException e) {
-            // Ignorar erros por enquanto
+            System.err.println("Erro ao ler os vídeos do arquivo: " + e.getMessage());
         }
         return videos;
     }
+
     public void editVideo(String videoTitulo, Video video) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String novaDataStr = sdf.format(video.getDataPublicacao());
@@ -62,7 +65,7 @@ public class FileHandle {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Erro ao ler o arquivo: " + e.getMessage());
+            System.err.println("Erro ao ler o arquivo para edição: " + e.getMessage());
             return;
         }
 
@@ -72,7 +75,7 @@ public class FileHandle {
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.err.println("Erro ao escrever no arquivo: " + e.getMessage());
+            System.err.println("Erro ao salvar as alterações no arquivo: " + e.getMessage());
         }
     }
 
@@ -90,7 +93,7 @@ public class FileHandle {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Erro ao ler o arquivo: " + e.getMessage());
+            System.err.println("Erro ao ler o arquivo para exclusão: " + e.getMessage());
         }
 
         if (!videoEncontrado) {
@@ -105,7 +108,7 @@ public class FileHandle {
             }
             System.out.println("Vídeo excluído com sucesso!");
         } catch (IOException e) {
-            System.err.println("Erro ao escrever no arquivo: " + e.getMessage());
+            System.err.println("Erro ao salvar o arquivo após exclusão: " + e.getMessage());
         }
     }
 }
