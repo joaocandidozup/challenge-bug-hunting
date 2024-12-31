@@ -21,10 +21,8 @@ public class VideoManager {
         System.out.print("Digite a data de publicação (dd/MM/yyyy): ");
         String dataStr = scanner.nextLine();
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            sdf.setLenient(false);
-            Date dataPublicacao = sdf.parse(dataStr);
-            Video video = new Video(titulo, descricao, duracao, categoria, validaData(dataPublicacao, scanner));
+            Date dataPublicacao = parseData(dataStr);
+            Video video = criaVideo(titulo, descricao, duracao, categoria, dataPublicacao);
             videoService.addVideo(video);
             video.getCategoria();
             System.out.println("Vídeo adicionado com sucesso!");
@@ -38,10 +36,8 @@ public class VideoManager {
     public void editarVideo(String videoTitulo, String titulo, String descricao, int duracao, String categoria) {
         String novaDataStr = scanner.nextLine();
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            sdf.setLenient(false);
-            Date dataPublicacao = sdf.parse(novaDataStr);
-            Video video = new Video(titulo, descricao, duracao, categoria, validaData(dataPublicacao, scanner));
+            Date dataPublicacao = parseData(novaDataStr);
+            Video video = criaVideo(titulo, descricao, duracao, categoria, dataPublicacao);
             videoService.editVideo(videoTitulo, video);
         } catch (ParseException e) {
             System.err.println("Data inválida, digite no formato (dd/MM/yyyy)");
@@ -137,5 +133,14 @@ public class VideoManager {
         return dataPublicacao;
     }
 
+    private Date parseData(String dateStr) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdf.setLenient(false);
+        return sdf.parse(dateStr);
+    }
+
+    private Video criaVideo(String titulo, String descricao, int duracao, String categoria, Date dataPublicacao) throws ParseException {
+        return new Video(titulo, descricao, duracao, categoria, validaData(dataPublicacao, scanner));
+    }
 
 }
